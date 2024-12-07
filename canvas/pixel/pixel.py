@@ -5,17 +5,26 @@ from abc import ABC, abstractmethod
 class Element(ABC):
     pass
 
-class Pixel(ABC):
+class Pixel[T: Element](ABC):
+    """
+    Pixel is an interface that represent the content of a Point on a canvas.
+
+    It must :
+    1 --- Be able to be converted to a single Data (Gray tone, RGB, Palette) for painters
+    2 --- Have a static method to create an empty Pixel
+    3 - implements update() and set() to edit its content. But complex Pixels can have their own way of editing themselves
+
+    """
 
     @abstractmethod
-    def set(self, element: Element) -> None:
+    def set(self, element: T) -> None:
         """
         Set the element.
         """
         raise NotImplementedError()
 
     @abstractmethod
-    def get(self) -> Element:
+    def get(self) -> T:
         """
         Get the element.
         """

@@ -9,7 +9,10 @@ from canvas.painter.stream_canvas_painter import StreamCanvasPainter, Stream
 
 
 class PngStreamCanvasPainter[T: PaletteCanvas, Frame: Stream](StreamCanvasPainter, ABC):
-
+    """
+    PngStreamCanvasPainter is a specification of StreamCanvasPainter that works with PNG format.
+    It requires PaletteCanvas or RGBCanvas (last one not yet Implemented)
+    """
 
     def __init__(self, canvas: T, **kwargs):
         super().__init__(canvas=canvas, **kwargs)

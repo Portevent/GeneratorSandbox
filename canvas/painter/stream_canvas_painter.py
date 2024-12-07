@@ -9,6 +9,11 @@ Stream = BytesIO | BinaryIO
 
 
 class StreamCanvasPainter[T: Canvas, Frame: Stream](CanvasPainter, ABC):
+    """
+    StreamCanvasPainter is a specification of CanvasPainter that works with Frames on BytesIO or BinaryIO.
+    It specializes paint() into a wrapper that create a new binary stream if none exists yet, and
+    call a new _paint abstract method to write the Frame onto the stream.
+    """
 
     @abstractmethod
     def _paint(self, stream: Stream):

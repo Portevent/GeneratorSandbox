@@ -5,6 +5,13 @@ from canvas.canvas import Canvas
 
 
 class CanvasPainter[T: Canvas, Frame](ABC):
+    """
+    CanvasPainter is an abstract class that export Canvas to Frames, and then save them somewhere
+    CanvasPainters must implement :
+
+    - paint : To export current Canvas to a Frame
+    - save : To save current Frames to something
+    """
     canvas: T
     frames: List[Frame]
     animation = False
@@ -24,7 +31,10 @@ class CanvasPainter[T: Canvas, Frame](ABC):
         """
         Create a new frame and save it within frames
         """
-        self.frames.append(self.paint())
+        if self.animation:
+            self.frames.append(self.paint())
+        else:
+            self.frames = [self.paint()]
 
     @abstractmethod
     def paint(self, **kwargs) -> Frame:

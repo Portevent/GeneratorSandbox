@@ -4,6 +4,9 @@ from canvas.pixel import Pixel
 
 
 class IntPixel(Pixel):
+    """
+    IntPixel are pixel that hold integer data. Mainly useful for palette generation
+    """
     color: int
 
     def __init__(self, color):

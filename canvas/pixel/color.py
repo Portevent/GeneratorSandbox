@@ -5,7 +5,7 @@ from typing import Self
 
 class Color:
     """
-    Color
+    Color helper class
     """
 
     r: int

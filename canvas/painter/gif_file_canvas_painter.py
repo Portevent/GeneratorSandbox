@@ -2,14 +2,14 @@ from io import BytesIO
 
 from PIL import Image
 
-from canvas.painter.file_stream_canvas_painter import FileStreamCanvasPainter
-from canvas.painter.png_stream_canvas_painter import PngStreamCanvasPainter
+from canvas import PngFileCanvasPainter
 from canvas.painter.stream_canvas_painter import Stream
 
 
-class GifFileCanvasPainter(PngStreamCanvasPainter, FileStreamCanvasPainter):
+class GifFileCanvasPainter(PngFileCanvasPainter):
     """
     Export Canvas to GIF files
+    Override PngFileCanvasPainter to add support for GIF files.
     """
 
     def saveStream(self, duration: int, **kwargs) -> Stream:
