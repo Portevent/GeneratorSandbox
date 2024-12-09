@@ -7,14 +7,14 @@ class Palette:
 
     colors: List[Color]
     size: int
-    bitdepth: int
-    max_colors: int
+    bitDepth: int
+    _maxColors: int
 
     def __init__(self):
         self.colors = []
         self.size = 0
-        self.bitdepth = 1
-        self.max_colors = 2
+        self.bitDepth = 1
+        self._maxColors = 2
 
     def save(self, color: Color) -> int:
         if color in self.colors:
@@ -22,9 +22,9 @@ class Palette:
         else:
             self.colors.append(color)
             self.size += 1
-            if self.size >= self.max_colors:
-                self.bitdepth *= 2
-                self.max_colors = 2**self.bitdepth
+            if self.size >= self._maxColors:
+                self.bitDepth *= 2
+                self._maxColors = 2**self.bitDepth
 
             return self.size - 1
 

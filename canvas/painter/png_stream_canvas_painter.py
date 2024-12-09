@@ -20,11 +20,11 @@ class PngStreamCanvasPainter[T: PaletteCanvas, Frame: Stream](StreamCanvasPainte
 
     def _createWriter(self):
         """
-        This method create a writer. Once called, width, height and palette cannont be changed
+        This method create a writer. Once called, width, height and palette cannot be changed
         """
         if self.writer is None:
             colors: List[Tuple[int, int, int]] = list(map(Color.to_rgb, self.canvas.palette.list()))
-            self.writer = png.Writer(size=(self.canvas.width, self.canvas.height), palette=colors, bitdepth=self.canvas.palette.bitdepth)
+            self.writer = png.Writer(size=(self.canvas.width, self.canvas.height), palette=colors, bitdepth=self.canvas.palette.bitDepth)
 
     def _paint(self, stream: Stream):
         self._createWriter()

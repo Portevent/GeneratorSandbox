@@ -14,6 +14,13 @@ class PaletteCanvas[T: IntPixel, Point: Point2D](Canvas2D):
         self.palette = palette
         super().__init__(width, height, constructor, pixels)
 
+    def setPalette(self, palette: Palette):
+        """
+        Sets the palette
+        :param palette: Palette
+        """
+        self.palette = palette
+
     def shift_pixel(self, value: int, point: Point):
         self.set(self.get(point) + value, point)
 

@@ -1,13 +1,14 @@
 from __future__ import annotations
 
+import random
 from abc import ABC
-from typing import List, Tuple, Callable, Iterator
+from typing import List, Tuple, Callable, Iterator, Set
 
 from canvas.canvas import Canvas
 from canvas.pixel import Pixel
 
-
 Point2D = Tuple[int, int]
+
 
 class Canvas2D[T: Pixel, Point: Point2D](Canvas, ABC):
     """
@@ -32,13 +33,13 @@ class Canvas2D[T: Pixel, Point: Point2D](Canvas, ABC):
 
     def _validPoint(self, point: Point) -> bool:
         if point[0] < 0:
-            raise Exception(f"X ({point[0]}) too small")
+            return False
         if point[0] >= self.width:
-            raise Exception(f"X ({point[0]}) too big")
+            return False
         if point[1] < 0:
-            raise Exception(f"Y ({point[1]}) too small")
-        if point[1] > self.height:
-            raise Exception(f"Y ({point[1]}) too big")
+            return False
+        if point[1] >= self.height:
+            return False
 
         return True
 
@@ -56,3 +57,48 @@ class Canvas2D[T: Pixel, Point: Point2D](Canvas, ABC):
         for x in range(pointA[0], pointB[0]):
             for y in range(pointA[1], pointB[1]):
                 yield x, y
+
+    def getNeighbor(self, point: Point, orthogonal: bool = False) -> Set[Point]:
+        """
+        Get Set of Neighbors point (direct or orthogonal)
+        :param point: Point
+        :param orthogonal: Orthogonal (true = takes account touching corners)
+        """
+        return set(filter(self._validPoint,
+                          [
+                              (point[0] - 1, point[1] - 1),
+                              (point[0] - 1, point[1]),
+                              (point[0] - 1, point[1] + 1),
+                              (point[0], point[1] - 1),
+                              (point[0], point[1] + 1),
+                              (point[0] + 1, point[1] - 1),
+                              (point[0] + 1, point[1]),
+                              (point[0] + 1, point[1] + 1),
+                          ] if orthogonal else [
+                              (point[0] - 1, point[1]),
+                              (point[0] + 1, point[1]),
+                              (point[0], point[1] - 1),
+                              (point[0], point[1] + 1)
+                          ]))
+
+    def getNeighbors(self, points: Set[Point], avoid: Set[Point] | None = None) -> Set[Point]:
+        """
+        Return all the neighbors points from Set (contain only new point)
+        :param points: Set of points
+        :param avoid: Point to exclude (useful to avoid traceback)
+        :return: Neighbors
+        """
+        if avoid is None:
+            avoid = set()
+
+        neighbors = set()
+        for point in points:
+            neighbors = neighbors.union(self.getNeighbor(point))
+        return neighbors.difference(points).difference(avoid)
+
+    def getRandomPoint(self) -> Point:
+        return int(random.random() * self.width), int(random.random() * self.height)
+
+    def getRandomPointAround(self, point: Point, vRange: int, hRange: int) -> Point:
+        return int(point[0] + ((random.random() -0.5) * vRange)), int(point[1] + ((random.random() - 0.5) * hRange))
+

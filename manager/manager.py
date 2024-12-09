@@ -30,7 +30,7 @@ class Manager(ABC):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_val is not None:
-            self._stop(exc_type)
+            self._stop(error=exc_type)
 
     def _stop(self, error: Exception = None, **kwargs):
         self.running = False
@@ -41,16 +41,16 @@ class Manager(ABC):
         print(self.profiler.getProfilingResult())
 
         if error:
-            print(f"Proccess stopped at step {self.currentStep} because of {error}")
+            print(f"Process stopped at step {self.currentStep} because of {error}")
         else:
             print(f"Process successfully ended at step {self.currentStep}")
 
     def _start(self, **kwargs):
         self.running = True
         self.currentStep = 0
+        self.generator.initialize(**kwargs)
         self.painter.createFrame()
         self.profiler.startProfiling()
-        self.generator.initialize(**kwargs)
 
 
     def run(self, maxSteps: int = -1, **kwargs):

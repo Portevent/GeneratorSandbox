@@ -8,6 +8,7 @@ class PngFileCanvasPainter[T: PaletteCanvas, Frame: Stream](PngStreamCanvasPaint
     """
     Export Canvas to PNG files
     """
+    animation = True
 
     def saveStream(self, **kwargs) -> Stream:
         if len(self.frames) == 0:
