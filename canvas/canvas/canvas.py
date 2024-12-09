@@ -63,7 +63,7 @@ class Canvas[T: Pixel, Point](ABC):
         return self._setPixel(point, pixel)
 
     @abstractmethod
-    def get_points_in(self, pointA: Point, pointB: Point) -> Iterator[Point]:
+    def getPointsIn(self, pointA: Point, pointB: Point) -> Iterator[Point]:
         """
         Get the sequence of points inside a rectangle.
         """
@@ -80,5 +80,5 @@ class Canvas[T: Pixel, Point](ABC):
             raise Exception(f"{pointA} is not a valid coordinate")
         if not self._validPoint(pointB):
             raise Exception(f"{pointB} is not a valid coordinate")
-        for point in self.get_points_in(pointA, pointB):
+        for point in self.getPointsIn(pointA, pointB):
             self._getPixel(point).update(pixel)

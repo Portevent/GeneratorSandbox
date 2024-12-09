@@ -49,18 +49,26 @@ class Canvas2D[T: Pixel, Point: Point2D](Canvas, ABC):
     def _setPixel(self, point: Point, pixel: T):
         self.pixels[point[0] + (point[1] * self.width)] = pixel
 
-    def get_rows(self) -> Iterator[List[T]]:
+    def _constrainPoint(self, point: Point) -> Point:
+        """
+        Constrain a point within the bounds of the canvas
+        :param point: Point to be constrained
+        :return: Original point, or closest point inside canvas
+        """
+        return max(0, min(self.width-1, point[0])), max(0, min(self.height-1, point[1]))
+
+    def getRows(self) -> Iterator[List[T]]:
         for i in range(0, self.width * self.height, self.width):
             yield self.pixels[i: i + self.width]
 
-    def get_points_in(self, pointA: Point, pointB: Point) -> Iterator[Point]:
+    def getPointsIn(self, pointA: Point, pointB: Point) -> Iterator[Point]:
         for x in range(pointA[0], pointB[0]):
             for y in range(pointA[1], pointB[1]):
                 yield x, y
 
-    def getNeighbor(self, point: Point, orthogonal: bool = False) -> Set[Point]:
+    def getNeighborPoints(self, point: Point, orthogonal: bool = False) -> Set[Point]:
         """
-        Get Set of Neighbors point (direct or orthogonal)
+        Get Set of Neighbor points (direct or orthogonal)
         :param point: Point
         :param orthogonal: Orthogonal (true = takes account touching corners)
         """
@@ -81,7 +89,7 @@ class Canvas2D[T: Pixel, Point: Point2D](Canvas, ABC):
                               (point[0], point[1] + 1)
                           ]))
 
-    def getNeighbors(self, points: Set[Point], avoid: Set[Point] | None = None) -> Set[Point]:
+    def getNeighborsPoints(self, points: Set[Point], avoid: Set[Point] | None = None) -> Set[Point]:
         """
         Return all the neighbors points from Set (contain only new point)
         :param points: Set of points
@@ -93,12 +101,12 @@ class Canvas2D[T: Pixel, Point: Point2D](Canvas, ABC):
 
         neighbors = set()
         for point in points:
-            neighbors = neighbors.union(self.getNeighbor(point))
+            neighbors = neighbors.union(self.getNeighborPoints(point))
         return neighbors.difference(points).difference(avoid)
 
     def getRandomPoint(self) -> Point:
         return int(random.random() * self.width), int(random.random() * self.height)
 
     def getRandomPointAround(self, point: Point, vRange: int, hRange: int) -> Point:
-        return int(point[0] + ((random.random() -0.5) * vRange)), int(point[1] + ((random.random() - 0.5) * hRange))
+        return self._constrainPoint((int(point[0] + ((random.random() -0.5) * vRange)), int(point[1] + ((random.random() - 0.5) * hRange))))
 

@@ -21,7 +21,7 @@ class Filler[T: Canvas2D](Generator):
         self.pixel = pixel
 
     def initialize(self, **kwargs):
-        self.iterator = self.canvas.get_points_in(self.start, self.end)
+        self.iterator = self.canvas.getPointsIn(self.start, self.end)
 
     def step(self) -> bool:
         point: Point2D= next(self.iterator, None)
