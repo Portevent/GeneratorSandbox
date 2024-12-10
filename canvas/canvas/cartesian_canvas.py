@@ -10,7 +10,7 @@ from canvas.pixel import Pixel
 Point2D = Tuple[int, int]
 
 
-class Canvas2D[T: Pixel, Point: Point2D](Canvas, ABC):
+class CartesianCanvas[T: Pixel, Point: Point2D](Canvas, ABC):
     """
     Canvas2D is a finite two-dimensional canvas that can be drawn onto.
     It has a width and a height
@@ -21,15 +21,6 @@ class Canvas2D[T: Pixel, Point: Point2D](Canvas, ABC):
 
     width: int
     height: int
-
-    def __init__(self, width: int, height: int, constructor: Callable[[], T], pixels: List[T] | None = None):
-        """
-        Pixels are saved on a List
-        """
-        self.width = width
-        self.height = height
-
-        self.pixels = pixels or [constructor() for _ in range(width * height)]
 
     def _validPoint(self, point: Point) -> bool:
         if point[0] < 0:

@@ -14,7 +14,7 @@ class LinkedPixel(Pixel):
     neighbors: List[LinkedPixel | None]
     neighborsSize: int
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.neighbors = [None] * self.neighborsSize
 
     def getNeighbors(self) -> Tuple[LinkedPixel | None]:

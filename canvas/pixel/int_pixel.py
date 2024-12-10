@@ -9,7 +9,7 @@ class IntPixel(Pixel):
     """
     color: int
 
-    def __init__(self, color):
+    def __init__(self, color: int):
         self.color = color
 
     def set(self, element: int) -> None:

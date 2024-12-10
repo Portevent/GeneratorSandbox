@@ -28,4 +28,4 @@ class PngStreamCanvasPainter[T: PaletteCanvas, Frame: Stream](StreamCanvasPainte
 
     def _paint(self, stream: Stream):
         self._createWriter()
-        self.writer.write(stream, [map(IntPixel.get, row) for row in self.canvas.get_rows()])
+        self.writer.write(stream, [map(IntPixel.get, row) for row in self.canvas.getRows()])

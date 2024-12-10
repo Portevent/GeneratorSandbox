@@ -1,15 +1,20 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Iterator
+from typing import Iterator, Dict, Tuple
 
 from canvas.pixel import Pixel
 
 
-class Canvas[T: Pixel, Point](ABC):
+class Canvas[T: Pixel, Point: Tuple](ABC):
     """
     Canvas represent set of Point each having a Pixel
     """
+
+    pixels: Dict[Point, T]
+
+    def __init__(self, pixels: Dict[Point, T]):
+        self.pixels = pixels
 
     @abstractmethod
     def _validPoint(self, point: Point) -> bool:

@@ -1,6 +1,5 @@
 from abc import ABC
-from itertools import chain
-from typing import Set, List, Tuple
+from typing import List, Tuple
 
 from canvas import Canvas2D, Point2D, Pixel
 from generation.voronoi.voronoi import Voronoi

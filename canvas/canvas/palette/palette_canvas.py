@@ -1,7 +1,7 @@
 from typing import List, Callable
 
 from canvas.canvas import Canvas2D
-from canvas.canvas.canvas_2d import Point2D
+from canvas.canvas.cartesian_canvas import Point2D
 from canvas.canvas.palette.palette import Palette
 from canvas.pixel.int_pixel import IntPixel
 
@@ -12,7 +12,7 @@ class PaletteCanvas[T: IntPixel, Point: Point2D](Canvas2D):
     def __init__(self, width: int, height: int, palette: Palette, constructor: Callable[[], T],
                  pixels: List[T] | None = None):
         self.palette = palette
-        super().__init__(width, height, constructor, pixels)
+        super().__init__(width=width, height=height, constructor=constructor, pixels=pixels)
 
     def setPalette(self, palette: Palette):
         """

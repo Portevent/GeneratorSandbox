@@ -1,3 +1,4 @@
 from .canvas import Canvas
-from .canvas_2d import Canvas2D, Point2D
+from .cartesian_canvas import Canvas2D, Point2D
+from .linked_canvas import LinkedCanvas2D
 from .palette import *
