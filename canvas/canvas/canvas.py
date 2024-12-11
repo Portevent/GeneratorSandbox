@@ -13,8 +13,8 @@ class Canvas[T: Pixel, Point: Tuple](ABC):
 
     pixels: Dict[Point, T]
 
-    def __init__(self, pixels: Dict[Point, T]):
-        self.pixels = pixels
+    def __init__(self, pixels: Dict[Point, T] | None = None):
+        self.pixels = pixels or {}
 
     @abstractmethod
     def _validPoint(self, point: Point) -> bool:
@@ -30,20 +30,6 @@ class Canvas[T: Pixel, Point: Tuple](ABC):
         """
         raise NotImplementedError()
 
-    @abstractmethod
-    def _getPixel(self, point: Point) -> T:
-        """
-        Get the pixel at the given point
-        """
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _setPixel(self, point: Point, pixel: T):
-        """
-        Set the pixel at the given point
-        """
-        raise NotImplementedError()
-
     def get(self, point: Point) -> T:
         """
         Get the value at the given point.
@@ -52,7 +38,7 @@ class Canvas[T: Pixel, Point: Tuple](ABC):
         if not self._validPoint(point):
             raise Exception(f"{point} is not a valid coordinate")
 
-        return self._getPixel(point)
+        return self.pixels[point]
 
     def set(self, point: Point, pixel: T):
         """
@@ -65,7 +51,20 @@ class Canvas[T: Pixel, Point: Tuple](ABC):
         if not self._validPixel(pixel):
             raise Exception(f"{pixel} is not a valid pixel")
 
-        return self._setPixel(point, pixel)
+        return self.pixels[point] = pixel
+
+    def update(self, point: Point, pixel: T):
+        """
+        Update the pixel at the given point.
+        :param point: Point
+        :param pixel: Pixel
+        """
+        if not self._validPoint(point):
+            raise Exception(f"{point} is not a valid coordinate")
+        if not self._validPixel(pixel):
+            raise Exception(f"{pixel} is not a valid pixel")
+
+        return self.pixels[point].update(pixel)
 
     @abstractmethod
     def getPointsIn(self, pointA: Point, pointB: Point) -> Iterator[Point]:
@@ -81,9 +80,5 @@ class Canvas[T: Pixel, Point: Tuple](ABC):
         :param pointB: To
         :param pixel: Pixel (will be copied())
         """
-        if not self._validPoint(pointA):
-            raise Exception(f"{pointA} is not a valid coordinate")
-        if not self._validPoint(pointB):
-            raise Exception(f"{pointB} is not a valid coordinate")
         for point in self.getPointsIn(pointA, pointB):
-            self._getPixel(point).update(pixel)
+            self.update(point, pixel)
