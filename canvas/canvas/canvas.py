@@ -1,53 +1,41 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import Iterator
+from abc import ABC
+from random import random
+from typing import Iterator, Dict, List
 
 from canvas.pixel import Pixel
+from canvas.pixel.pixel import Point
 
 
-class Canvas[T: Pixel, Point](ABC):
+class Canvas[T: Pixel](ABC):
     """
     Canvas represent set of Point each having a Pixel
     """
+    _width: int
+    _height: int
+    _pixels: Dict[Point, T]
 
-    @abstractmethod
+    def __init__(self, width: int, height: int, pixels: Dict[Point, T]) -> None:
+        self._width = width
+        self._height = height
+        self._pixels = pixels
+
     def _validPoint(self, point: Point) -> bool:
         """
         Assert a point is valid
         """
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _validPixel(self, pixel: T) -> bool:
-        """
-        Assert a pixel is valid
-        """
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _getPixel(self, point: Point) -> T:
-        """
-        Get the pixel at the given point
-        """
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _setPixel(self, point: Point, pixel: T):
-        """
-        Set the pixel at the given point
-        """
-        raise NotImplementedError()
+        return 0 <= point[0] < self._width and 0 <= point[1] < self._height
 
     def get(self, point: Point) -> T:
         """
-        Get the value at the given point.
+        Get the pixel at the given point.
         :return: Element
         """
         if not self._validPoint(point):
             raise Exception(f"{point} is not a valid coordinate")
 
-        return self._getPixel(point)
+        return self._pixels[point]
 
     def set(self, point: Point, pixel: T):
         """
@@ -57,28 +45,47 @@ class Canvas[T: Pixel, Point](ABC):
         """
         if not self._validPoint(point):
             raise Exception(f"{point} is not a valid coordinate")
-        if not self._validPixel(pixel):
-            raise Exception(f"{pixel} is not a valid pixel")
 
-        return self._setPixel(point, pixel)
+        self._pixels[point] = pixel
 
-    @abstractmethod
-    def getPointsIn(self, pointA: Point, pointB: Point) -> Iterator[Point]:
+    def update(self, point: Point, pixel: T):
         """
-        Get the sequence of points inside a rectangle.
+        Update the pixel at the given point.
+        :param point: Point
+        :param pixel: Pixel
         """
-        raise NotImplementedError()
+        if not self._validPoint(point):
+            raise Exception(f"{point} is not a valid coordinate")
 
-    def fill(self, pointA: Point, pointB: Point, pixel: Pixel):
+        return self._pixels[point].update(pixel)
+
+    def getPixelsIn(self, pointA: Point, pointB: Point) -> Iterator[T]:
+        for x in range(pointA[0], pointB[0] + 1):
+            for y in range(pointA[1], pointB[1] + 1):
+                yield self.get((x, y))
+
+    def getRows(self) -> Iterator[List[Pixel]]:
+        for row in range(self._height):
+            yield [self.get((x, row)) for x in range(self._width)]
+
+    def _constrainPoint(self, point: Point) -> Point:
         """
-        Fill the area with the given element.
-        :param pointA: From
-        :param pointB: To
-        :param pixel: Pixel (will be copied())
+        Constrain a point within the bounds of the canvas
+        :param point: Point to be constrained
+        :return: Original point, or closest point inside canvas
         """
-        if not self._validPoint(pointA):
-            raise Exception(f"{pointA} is not a valid coordinate")
-        if not self._validPoint(pointB):
-            raise Exception(f"{pointB} is not a valid coordinate")
-        for point in self.getPointsIn(pointA, pointB):
-            self._getPixel(point).update(pixel)
+        return max(0, min(self.width, point[0])), max(0, min(self.height, point[1]))
+
+    def getRandomPoint(self) -> Point:
+        return int(random() * self.width), int(random() * self.height)
+
+    def getRandomPointAround(self, point: Point, maxOffset: int) -> Point:
+        return self._constrainPoint((int(point[0] + (random()-0.5) * maxOffset), int(point[1] + (random()-0.5) * maxOffset)))
+
+    @property
+    def width(self) -> int:
+        return self._width
+
+    @property
+    def height(self) -> int:
+        return self._height

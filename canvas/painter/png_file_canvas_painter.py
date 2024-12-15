@@ -1,10 +1,9 @@
-from canvas.canvas import PaletteCanvas
 from canvas.painter.file_canvas_painter import FileCanvasPainter
 from canvas.painter.png_stream_canvas_painter import PngStreamCanvasPainter
 from canvas.painter.stream_canvas_painter import Stream
 
 
-class PngFileCanvasPainter[T: PaletteCanvas, Frame: Stream](PngStreamCanvasPainter, FileCanvasPainter):
+class PngFileCanvasPainter[T: Canvas, Frame: Stream](PngStreamCanvasPainter, FileCanvasPainter):
     """
     Export Canvas to PNG files
     """

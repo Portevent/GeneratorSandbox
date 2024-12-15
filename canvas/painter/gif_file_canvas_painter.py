@@ -14,5 +14,5 @@ class GifFileCanvasPainter(PngFileCanvasPainter):
 
     def saveStream(self, duration: int = 20, **kwargs) -> Stream:
         out = BytesIO()
-        Image.open(self.frames[0]).save(out, format="GIF", save_all=True, append_images=[Image.open(frame) for frame in self.frames[1:]], loop=0, duration=duration)
+        Image.open(self.frames[-1]).save(out, format="GIF", save_all=True, append_images=[Image.open(frame) for frame in self.frames], loop=0, duration=duration)
         return out

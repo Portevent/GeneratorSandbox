@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Tuple, Callable, List
+from typing import Tuple, List
 
-from canvas.pixel.pixel import Pixel
+from canvas.pixel.pixel import Point
+from canvas.pixel.simple_pixel import SimplePixel
 
 
-class LinkedPixel(Pixel):
+class LinkedPixel[T](SimplePixel):
     """
     LinkedPixel is an interface that represent linked pixel
     """
@@ -14,7 +15,8 @@ class LinkedPixel(Pixel):
     neighbors: List[LinkedPixel | None]
     neighborsSize: int
 
-    def __init__(self):
+    def __init__(self, element: T | None = None, point: Point | None = None) -> None:
+        super().__init__(element, point)
         self.neighbors = [None] * self.neighborsSize
 
     def getNeighbors(self) -> Tuple[LinkedPixel | None]:
@@ -41,14 +43,3 @@ class LinkedPixel(Pixel):
         """
         self.neighbors[position] = other
         other.neighbors[self.getOppositePosition(position)] = self
-
-    @staticmethod
-    @abstractmethod
-    def generate(constructor: Callable[[], LinkedPixel], **kwargs) -> Tuple[LinkedPixel]:
-        """
-        Generate linked pixels
-        :param constructor:
-        :param kwargs:
-        :return:
-        """
-        raise NotImplementedError()
