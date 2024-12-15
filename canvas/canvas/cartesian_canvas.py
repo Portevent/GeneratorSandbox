@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+# NOT IMPLEMENTED
+
 import random
 from abc import ABC
-from typing import List, Tuple, Callable, Iterator, Set
+from typing import Tuple, Callable, Type
 
 from canvas.canvas import Canvas
 from canvas.pixel import Pixel
@@ -21,7 +23,7 @@ class CartesianCanvas[T: Pixel, Point: Tuple](Canvas, ABC):
     dimensionsMax: Tuple # Maximum value for coordinates along dimensions
     dimensionsMin: Tuple # Minimum value for coordinates along dimensions
 
-    def __init__(self, dimensions: int, dimensionsMin: Tuple | None = None, dimensionsMax: Tuple | None = None, pixelClass: Type[CartesianPixel], emptyPixelConstructor: Callable[[], CartesianPixel] | None = None){
+    def __init__(self, pixelClass: Type[Pixel], emptyPixelConstructor: Callable[[Tuple], Pixel], dimensions: int, dimensionsMin: Tuple | None = None, dimensionsMax: Tuple | None = None):
         if pixelClass.dimensions != dimensions:
             raise Exception("Trying to create Cartesian Canvas with different dimensions count than its pixels")
 
@@ -29,11 +31,11 @@ class CartesianCanvas[T: Pixel, Point: Tuple](Canvas, ABC):
         self.dimensionsMin = dimensionsMin or tuple([0 for _ in range(self.dimensions)])
         self.dimensionsMax = dimensionsMax or tuple([0 for _ in range(self.dimensions)])
         self.pixels = pixelClass.generate(self.dimensionsMin, self.dimensionsMax, emptyPixelConstructor)
-    }
+
 
     def _validPoint(self, point: Point) -> bool:
-        for i in range(dimensions):
-            if not dimensionsMin[i] <= point[i] < dimensionsMax[i]: 
+        for i in range(self.dimensions):
+            if not self.dimensionsMin[i] <= point[i] < self.dimensionsMax[i]:
                 return False
 
         return True
@@ -52,6 +54,6 @@ class CartesianCanvas[T: Pixel, Point: Tuple](Canvas, ABC):
     def getRandomPointAround(self, point: Point, maxOffset: int) -> Point:
         return self._constrainPoint(tuple(
             [
-                point[i] + int(((random.random() -0.5) * maxOffset))) for i in range(self.dimensions)
+                point[i] + int((random.random() -0.5) * maxOffset) for i in range(self.dimensions)
             ]
-        ));
+        ))

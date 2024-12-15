@@ -8,9 +8,31 @@ class Color:
     Color helper class
     """
 
-    r: int
-    g: int
-    b: int
+    _r: int
+    _g: int
+    _b: int
+
+    @property
+    def r(self) -> int:
+        return self._r
+    @property
+    def g(self) -> int:
+        return self._g
+    @property
+    def b(self) -> int:
+        return self._b
+
+    @r.setter
+    def r(self, r: int) -> None:
+        self._r = min(256, max(r, 0))
+
+    @g.setter
+    def g(self, g: int) -> None:
+        self._g = min(256, max(g, 0))
+
+    @b.setter
+    def b(self, b: int) -> None:
+        self._b = min(256, max(b, 0))
 
     def __init__(self, r: int = 0, g: int = 0, b: int = 0):
         """
@@ -28,21 +50,21 @@ class Color:
         Convert to hex (#ff0000)
         :return: hex string
         """
-        return "#" + format(self.r, '02x') + format(self.g, '02x') + format(self.b, '02x')
+        return "#" + format(self._r, '02x') + format(self._g, '02x') + format(self._b, '02x')
 
     def to_int(self) -> int:
         """
         Convert to int from 0 to 16777215
         :return: int number
         """
-        return self.r * 256 * 256 + self.g * 256 + self.b
+        return self._r * 256 * 256 + self._g * 256 + self._b
 
     def to_rgb(self) -> tuple[int, int, int]:
         """
         Convert to tuple (r, g, b)
         :return: tuple (r, g, b)
         """
-        return self.r, self.g, self.b
+        return self._r, self._g, self._b
 
     def add(self, amount: int) -> Self:
         """
@@ -59,7 +81,7 @@ class Color:
         return str(self.to_hex())
 
     def __repr__(self):
-        return f"[{self.r}/{self.g}/{self.b}]"
+        return f"[{self._r}/{self._g}/{self._b}]"
 
     def __hash__(self):
         return self.to_int()

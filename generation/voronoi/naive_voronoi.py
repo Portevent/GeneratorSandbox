@@ -1,65 +1,46 @@
-from abc import ABC
-from typing import Set, List, Tuple
+from copy import copy
+from typing import List
 
-from canvas import Canvas2D, Point2D, Pixel
+from canvas import Canvas, LinkedPixel
+from canvas.pixel.pixel import Point, Pixel
 from generation.voronoi.voronoi import Voronoi
 
 
-class NaiveVoronoi[T: Canvas2D, U: Point2D, V: Pixel](Voronoi, ABC):
+class NaiveVoronoi[T: Canvas[LinkedPixel]](Voronoi):
     """
     Abstract Voronoi implementation that solves it naively
     """
 
-    # Borders each germ can expand from
-    germsExpansion: List[Set[U]]
+    # Borders germs can expand from
+    germsExpansion: List[LinkedPixel]
 
-    # Previous expansion to avoid traceback
-    previousExpansion: Set[U]
-
-    def generateGerms(self, germsCount: int) -> Tuple[List[Set[U]], int]:
+    def generateInitialGerms(self) -> List[Point]:
         """
         Divide the canvas into area (*germs_count* rows and *germs_count* columns)
         Generates one germs in each cell, randomly placed inside the cell
         """
-        germs = []
-
-        hStep: int = int(self.canvas.width / germsCount)
-        vStep: int = int(self.canvas.height / germsCount)
-        for x in range(int(hStep / 2), self.canvas.width, hStep):
-            for y in range(int(vStep / 2), self.canvas.height, vStep):
-                point = self.canvas.getRandomPointAround((x, y), hStep, vStep)
-                germs.append({point})
-
-        return germs, germsCount**2
+        return [self.canvas.getRandomPoint() for _ in range(self.germsCount)]
 
     def initialize(self):
         super().initialize()
-        self.germsExpansion = self.germsPoints
-        self.previousExpansion = set()
+        self.germsExpansion = [self.canvas.get(point) for point in self.initialGerms]
 
     def step(self) -> bool:
         """
         Naive solution that expand germs to their empty neighbors until the canvas is filled
         """
-        newGerm = False
-
-        currentExpansion = set().union(*self.germsExpansion)
-        newExpansion = [set() for _ in range(self.germsCount)]
-
-
-        avoid = self.previousExpansion.union(currentExpansion)
-
-        for germId, border in enumerate(self.germsExpansion):
-            for point in self.canvas.getNeighbors(border, avoid):
-                if self.getGermAt(point) != -1:
+        try:
+            nextGerm = self.germsExpansion.pop(0)
+            nextGerm.element.add(-2)
+            for neighbor in nextGerm.getNeighbors():
+                if neighbor is None:
                     continue
 
-                self.setGermAt(germId, point)
-                newExpansion[germId].add(point)
-                newGerm = True
+                if neighbor.element is None:
+                    neighbor.element = copy(nextGerm.element)
+                    self.germsExpansion.append(neighbor)
 
-        self.previousExpansion = currentExpansion
-        self.germsExpansion = newExpansion
+            return True
 
-        return newGerm
-
+        except IndexError:
+            return False

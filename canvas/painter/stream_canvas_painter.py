@@ -16,14 +16,14 @@ class StreamCanvasPainter[T: Canvas, Frame: Stream](CanvasPainter, ABC):
     """
 
     @abstractmethod
-    def _paint(self, stream: Stream):
+    def _paint(self, stream: Stream, **kwargs):
         """
         Paint the canvas on the given stream.
         :param stream: Stream to paint to
         """
         raise NotImplementedError()
 
-    def paint(self, stream: Frame | None = None) -> Stream:
+    def paint(self, stream: Frame | None = None, **kwargs) -> Stream:
         """
         Paint the canvas on a BytesIO
         :param stream: Stream to paint to (or a new one)
@@ -32,6 +32,6 @@ class StreamCanvasPainter[T: Canvas, Frame: Stream](CanvasPainter, ABC):
         if stream is None:
             stream = BytesIO()
 
-        self._paint(stream)
+        self._paint(stream, **kwargs)
 
         return stream

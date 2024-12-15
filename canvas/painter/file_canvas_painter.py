@@ -33,4 +33,4 @@ class FileCanvasPainter[T: Canvas, Frame](StreamCanvasPainter, ABC):
         with self.file.open(mode="bw") as f:
             out = self.saveStream(**kwargs)
             f.write(out.getbuffer() if isinstance(out, BytesIO) else out)
-            print(f"Saved {len(out)} into {self.file}")
+            print(f"Saved into {self.file}")
