@@ -161,3 +161,6 @@ class Color:
         g += m
         b += m
         return Color.from_1rgb(r, g, b)
+
+    def __eq__(self, other):
+        return self.r == other.r and self.g == other.g and self.b == other.b

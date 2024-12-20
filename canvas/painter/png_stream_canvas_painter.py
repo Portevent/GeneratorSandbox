@@ -33,3 +33,8 @@ class PngStreamCanvasPainter[T: Canvas, Frame: Stream](StreamCanvasPainter, ABC)
     def _paint(self, stream: Stream, palette: Palette | None = None, **kwargs):
         self._createWriter(palette)
         self.writer.write(stream, [list(chain(*[pixel.getColor() for pixel in row])) for row in self.canvas.getRows()])
+
+        with open("out/last.png", "wb") as f:
+            f.write(stream.getbuffer())
+
+        print("Created debug frame")

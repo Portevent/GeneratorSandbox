@@ -68,6 +68,10 @@ class Canvas[T: Pixel](ABC):
         for row in range(self._height):
             yield [self.get((x, row)) for x in range(self._width)]
 
+    def getPixels(self) -> Iterator[Pixel]:
+        for pixel in self._pixels.values():
+            yield pixel
+
     def _constrainPoint(self, point: Point) -> Point:
         """
         Constrain a point within the bounds of the canvas

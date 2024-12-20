@@ -48,6 +48,7 @@ class AnimationManager(Manager):
         res: bool = self.generator.step()
 
         if self.currentStep % self.currentInterval == 0:
+            print(f"Step {self.currentStep}", end="\r")
             self.frameCount += 1
 
             if self.config.mode == AnimationPainting.ON_THE_FLY:

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Tuple, List
+from typing import Tuple, List, Self
 
 from canvas.pixel.pixel import Point
 from canvas.pixel.simple_pixel import SimplePixel
@@ -12,7 +12,7 @@ class LinkedPixel[T](SimplePixel):
     LinkedPixel is an interface that represent linked pixel
     """
 
-    neighbors: List[LinkedPixel | None]
+    neighbors: List[Self | None]
     neighborsSize: int
 
     def __init__(self, element: T | None = None, point: Point | None = None) -> None:

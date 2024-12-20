@@ -31,7 +31,7 @@ class NaiveVoronoi[T: Canvas[LinkedPixel]](Voronoi):
         """
         try:
             nextGerm = self.germsExpansion.pop(0)
-            nextGerm.element.add(-2)
+            nextGerm.element.add(-4)
             for neighbor in nextGerm.getNeighbors():
                 if neighbor is None:
                     continue

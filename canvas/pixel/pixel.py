@@ -26,7 +26,7 @@ class Pixel[T](ABC):
         self._point = point
 
     def __str__(self):
-        return f"[{self._point}]"
+        return f"[{self._point} : {self._element}]"
 
     @property
     def element(self) -> T:
