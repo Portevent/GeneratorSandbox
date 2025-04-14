@@ -15,8 +15,9 @@ class CanvasPainter[T: Canvas, Frame](ABC):
     canvas: T
     frames: List[Frame]
     animation = False
+    maxFrame: int | None = None
 
-    def __init__(self, canvas: T | None = None, **kwargs):
+    def __init__(self, canvas: T | None = None):
         self.canvas = canvas
         self.frames = []
 
@@ -32,34 +33,30 @@ class CanvasPainter[T: Canvas, Frame](ABC):
         Create a new frame and save it within frames
         """
         if self.animation:
+
+            if self.maxFrame is not None and len(self.frames) >= self.maxFrame:
+                self.frames = self.frames[::2]
+
             self.frames.append(self.paint())
         else:
             self.frames = [self.paint()]
 
+    def setMaxFrame(self, maxFrame: int) -> Self:
+        """
+        Define the max number of frames to store
+        """
+        self.maxFrame = maxFrame
+        return self
+
     @abstractmethod
-    def paint(self, **kwargs) -> Frame:
+    def paint(self) -> Frame:
         """
         Generate a new frame of current canvas situation
         """
         raise NotImplementedError()
 
-    def animate(self, **kwargs):
-        """
-        Return data that represents the whole animation
-        """
-        raise NotImplementedError()
-
-    def export(self, **kwargs):
-        """
-        Return data that represent the last frame or the whole animation
-        """
-        if self.animation:
-            return self.animate(**kwargs)
-        else:
-            return self.frames[-1]
-
     @abstractmethod
-    def save(self, **kwargs):
+    def save(self):
         """
         Save export
         """
