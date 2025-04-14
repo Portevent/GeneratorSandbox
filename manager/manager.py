@@ -5,7 +5,7 @@ from generation import Generator
 from profiling import Profiler
 
 
-class Manager(ABC):
+class Manager:
 
     canvas: Canvas
     painter: CanvasPainter
@@ -32,11 +32,11 @@ class Manager(ABC):
         if exc_val is not None:
             self._stop(error=exc_type)
 
-    def _stop(self, error: Exception = None, **kwargs):
+    def _stop(self, error: Exception = None):
         self.running = False
         self.profiler.stopProfiling()
         self.painter.createFrame()
-        self.painter.save(**kwargs)
+        self.painter.save()
 
         print(self.profiler.getProfilingResult())
 
@@ -45,32 +45,25 @@ class Manager(ABC):
         else:
             print(f"Process successfully ended at step {self.currentStep}")
 
-    def _start(self, **kwargs):
+    def _start(self):
         self.running = True
         self.currentStep = 0
-        self.generator.initialize(**kwargs)
+        self.generator.initialize()
         self.painter.createFrame()
         self.profiler.startProfiling()
 
 
-    def run(self, maxSteps: int = -1, **kwargs):
+    def run(self, maxSteps: int = -1):
         """
         Run the algorithm
         :param maxSteps: maximum number of steps to run
         """
 
-        self._start(**kwargs)
+        self._start()
 
-        while self.step() and self.currentStep != maxSteps:
+        while self.generator.step() and self.currentStep != maxSteps:
             self.currentStep += 1
+            self.painter.createFrame()
 
-        self._stop(**kwargs)
+        self._stop()
 
-    @abstractmethod
-    def step(self) -> bool:
-        """
-        Run a step in the generator
-        Occasionally save the resulting frame
-        :param step: Current step
-        """
-        raise NotImplementedError()

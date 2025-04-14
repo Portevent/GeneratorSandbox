@@ -58,7 +58,7 @@ class ImageCanvasPainter[T: Canvas, Frame: Stream](FileCanvasPainter):
         self._createWriter()
         stream = BytesIO()
 
-        self.writer.write(stream, [list(chain(*[pixel.getColor() for pixel in row])) for row in self.canvas.getRows()])
+        self.writer.write(stream, [list(chain(*row)) for row in self.canvas.getRgbRows()])
 
         return stream
 
