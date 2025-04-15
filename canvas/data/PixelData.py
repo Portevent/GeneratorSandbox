@@ -6,7 +6,7 @@ from color import Color
 
 class PixelData(VisualData):
     """
-    Visual Data are CellData that can be visuallized by a image (1x1 image for simple pixel data)
+    Simple color Pixel
     """
 
     width = 1

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from color import Color
 
@@ -30,6 +30,9 @@ class Palette:
 
     def list(self) -> List[Color]:
         return self.colors
+
+    def as_rgbs(self) -> List[Tuple[int, int, int]]:
+        return [color.to_rgb() for color in self.colors]
 
     def get(self, color: Color) -> int:
         return self.colors.index(color)

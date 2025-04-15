@@ -18,7 +18,7 @@ class Generator[T: BaseBoard](ABC):
     seed: float
 
     def __init__(self, seed: float | None = None,
-                 board: T | None = None, **kwargs):
+                 board: T | None = None):
         """
         Create a Generator
         Randomness can be seed

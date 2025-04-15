@@ -1,5 +1,6 @@
 from canvas.data.PixelData import PixelData
 
+
 class BigPixelData(PixelData):
     """
     Big Pixel
@@ -7,4 +8,3 @@ class BigPixelData(PixelData):
 
     width = 10
     height = 10
-

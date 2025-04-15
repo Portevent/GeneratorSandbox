@@ -1,4 +1,4 @@
-from canvas import VisualBoard, PixelData, Coordinate
+from canvas import VisualBoard, PixelData, Coordinate, BaseCell
 from color import Color
 from generation import Filler
 from manager import Manager
@@ -13,8 +13,11 @@ HEIGHT = 10
 # Colors
 board = VisualBoard.EMPTY(WIDTH, HEIGHT, PixelData)
 
+def setRed(_: Coordinate, cell: BaseCell, __: float) -> None:
+    cell.cell_data.setColor(Color.RED())
+
 # Generator
-generator = Filler(start=Coordinate(2, 2), end=Coordinate(7,7), fillWith=Color.RED())
+generator = Filler(start=Coordinate(2, 2), end=Coordinate(7,7)).do(setRed)
 
 # Painter
 painter = ImageBoardPainter(board, "out/filler.gif").setGif()

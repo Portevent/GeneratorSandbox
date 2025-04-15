@@ -31,14 +31,15 @@ class ImageBoardPainter[T: VisualBoard, Frame: Stream](FileBoardPainter):
 
     def setDuration(self, duration: int) -> Self:
         """
-        Set the duration in seconds (GIF Only)
+        Set the duration of frames in milliseconds (GIF Only)
+        20ms in the min and optimal (<20 is actually slower)
         """
         self.duration = duration
         return self
 
     def setLoop(self, loop: bool) -> Self:
         """
-        Activate or desactivate looping (GIF Only)
+        Activate or deactivate looping (GIF Only)
         """
         self.loop = loop
         return self
@@ -56,10 +57,14 @@ class ImageBoardPainter[T: VisualBoard, Frame: Stream](FileBoardPainter):
         """
         if self.writer is None:
             if self.palette:
-                colors: List[Tuple[int, int, int]] = list([color.to_rgb() for color in self.palette.list()])
-                self.writer = png.Writer(size=(self.board.visual_width, self.board.visual_height), palette=colors, bitdepth=self.palette.bitDepth)
+                self.writer = png.Writer(size=self.board.visual_size,
+                                         palette=self.palette.as_rgbs(),
+                                         bitdepth=self.palette.bitDepth)
             else:
-                self.writer = png.Writer(size=(self.board.visual_width, self.board.visual_height), greyscale=False, alpha=False, bitdepth=8)
+                self.writer = png.Writer(size=self.board.visual_size,
+                                         greyscale=False,
+                                         alpha=False,
+                                         bitdepth=8)
 
     def paint(self):
         self._createWriter()
@@ -76,7 +81,12 @@ class ImageBoardPainter[T: VisualBoard, Frame: Stream](FileBoardPainter):
 
         if self.gif:
             out = BytesIO()
-            Image.open(self.frames[-1]).save(out, format="GIF", save_all=True, append_images=[Image.open(frame) for frame in self.frames], loop=0 if (loop or self.loop) else None, duration=duration or self.duration)
+            Image.open(self.frames[-1]).save(out,
+                                             format="GIF",
+                                             save_all=True,
+                                             append_images=[Image.open(frame) for frame in self.frames],
+                                             loop=0 if (loop or self.loop) else None,
+                                             duration=duration or self.duration)
             return out
         else:
             return self.frames[-1]

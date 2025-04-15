@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-from typing import Self
+from typing import Self, List
 
+Gradient = List["Color"]
+Gradient2D = List[Gradient]
 
 class Color:
     """
@@ -186,7 +188,38 @@ class Color:
 
     @staticmethod
     def mix(colorA: Color, colorB: Color, mix: float = 0.5) -> Color:
-        return Color.from_rgb(int(colorA.r * (1-mix) + colorB.r * mix),
-                              int(colorA.g * (1-mix) + colorB.g * mix),
-                              int(colorA.b * (1-mix) + colorB.b * mix))
+        return Color.from_rgb(int(colorA.r * (1 - mix) + colorB.r * mix),
+                              int(colorA.g * (1 - mix) + colorB.g * mix),
+                              int(colorA.b * (1 - mix) + colorB.b * mix))
 
+    @classmethod
+    def GRADIENT(cls, colorA: Color, colorB: Color, size: int) -> Gradient:
+        """
+        Return a Gradient between colorA and colorB (inclusive)
+        """
+        return [cls.mix(colorA, colorB, mix / (size-1)) for mix in range(size)]
+
+    @classmethod
+    def GRADIENT2D(cls, colorA: Color, colorB: Color, width: int, height: int, inverted: bool = False) -> Gradient2D:
+        """
+        Return a 2D Gradient (from top left to bottom right)
+        """
+        gradient = cls.GRADIENT(colorA if not inverted else colorB, colorB if not inverted else colorA, height + width)
+
+        return [
+            cls.GRADIENT(gradient[i], gradient[width + i], width)
+            for i in range(height)
+        ]
+
+    @classmethod
+    def SUPER_GRADIENT2D(cls, colorA: Color, colorB: Color, width: int, height: int,
+                         sub_gradient_width: int, sub_gradient_height: int, inverted: bool = False) -> List[List[Gradient2D]]:
+        gradient = cls.GRADIENT(colorA, colorB, height + width)
+
+        return [
+            [
+                cls.GRADIENT2D(gradient[i+j], gradient[i+j+1], sub_gradient_width, sub_gradient_height, inverted)
+                for i in range(width)
+            ]
+            for j in range(height)
+        ]

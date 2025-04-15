@@ -14,8 +14,8 @@ class VisualBoard[T: BaseCell, U: VisualData](BaseBoard):
     def __init__(self, width: int, height: int, cells: Dict[Coordinate, T]) -> None:
         super().__init__(width, height, cells)
 
-    def setCellType(self, cell_type: Type[VisualData]) -> Self:
-        self.cell_visual_dimension = cell_type.width, cell_type.height
+    def setCellVisualDimension(self, width: int, height: int) -> Self:
+        self.cell_visual_dimension = width, height
         return self
 
     def getRgbRows(self) -> Iterable[List[Tuple[int, int, int]]]:
@@ -36,13 +36,17 @@ class VisualBoard[T: BaseCell, U: VisualData](BaseBoard):
     def visual_height(self) -> int:
         return self._height * self.cell_visual_dimension[1]
 
+    @property
+    def visual_size(self) -> (int, int):
+        return self.visual_width, self.visual_height
+
     @classmethod
     def EMPTY(cls, width: int, height: int, cell_type: Type[VisualData]) -> "VisualBoard":
         def getNew(_: Coordinate):
             return BaseCell(cell_type.EMPTY())
 
-        return cls.FROM(width, height, getNew, cell_type)
+        return cls.FROM(width, height, getNew, (cell_type.width, cell_type.height))
 
     @classmethod
-    def FROM(cls, width: int, height: int, constructor: Callable[[Coordinate], BaseCell[VisualData]], cell_type: Type[VisualData]) -> "VisualBoard":
-        return cls(width, height, {coordinate: constructor(coordinate) for coordinate in Coordinate.getCoordinatesBox(width, height)}).setCellType(cell_type)
+    def FROM(cls, width: int, height: int, constructor: Callable[[Coordinate], BaseCell[VisualData]], cell_dimension: Tuple[int, int]) -> "VisualBoard":
+        return cls(width, height, {coordinate: constructor(coordinate) for coordinate in Coordinate.getCoordinatesBox(width, height)}).setCellVisualDimension(*cell_dimension)
