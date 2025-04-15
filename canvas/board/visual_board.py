@@ -28,6 +28,13 @@ class VisualBoard[T: BaseCell, U: VisualData](BaseBoard):
     def getRawRgbRows(self) -> List[List[int]]:
         return [[component for cell in row for component in cell] for row in self.getRgbRows()]
 
+    @property
+    def visual_width(self) -> int:
+        return self._width * self.cell_visual_dimension[0]
+
+    @property
+    def visual_height(self) -> int:
+        return self._height * self.cell_visual_dimension[1]
 
     @classmethod
     def EMPTY(cls, width: int, height: int, cell_type: Type[VisualData]) -> "VisualBoard":

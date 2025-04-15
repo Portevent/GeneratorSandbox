@@ -50,6 +50,10 @@ class BaseBoard[T: BaseCell]:
         for coordinate in Coordinate.getCoordinatesInBox(coordinateA, coordinateB):
             yield self.get(coordinate)
 
+    def getCoordinatesAndCellsInBox(self, coordinateA: Coordinate, coordinateB: Coordinate) -> Iterator[T]:
+        for coordinate in Coordinate.getCoordinatesInBox(coordinateA, coordinateB):
+            yield coordinate, self.get(coordinate)
+
     def getRows(self) -> Iterator[List[T]]:
         for row in range(self._height):
             yield [self.get(Coordinate(x, row)) for x in range(self._width)]

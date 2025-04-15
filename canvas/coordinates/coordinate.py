@@ -28,3 +28,10 @@ class Coordinate:
     def __hash__(self):
         return hash((self.x, self.y))
 
+    @staticmethod
+    def Distance(start, end):
+        """
+        Returns the distance between two coordinates.
+        """
+        return abs(start.x - end.x) + abs(start.y - end.y)
+

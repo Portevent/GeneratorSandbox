@@ -171,3 +171,22 @@ class Color:
     @classmethod
     def RED(cls):
         return cls.from_rgb(255, 0, 0)
+
+    @classmethod
+    def GREEN(cls):
+        return cls.from_rgb(0, 255, 0)
+
+    @classmethod
+    def BLUE(cls):
+        return cls.from_rgb(0, 0, 255)
+
+    @classmethod
+    def WHITE(cls):
+        return cls.from_rgb(255, 255, 255)
+
+    @staticmethod
+    def mix(colorA: Color, colorB: Color, mix: float = 0.5) -> Color:
+        return Color.from_rgb(int(colorA.r * (1-mix) + colorB.r * mix),
+                              int(colorA.g * (1-mix) + colorB.g * mix),
+                              int(colorA.b * (1-mix) + colorB.b * mix))
+

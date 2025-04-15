@@ -57,9 +57,9 @@ class ImageBoardPainter[T: VisualBoard, Frame: Stream](FileBoardPainter):
         if self.writer is None:
             if self.palette:
                 colors: List[Tuple[int, int, int]] = list([color.to_rgb() for color in self.palette.list()])
-                self.writer = png.Writer(size=(self.board.width, self.board.height), palette=colors, bitdepth=self.palette.bitDepth)
+                self.writer = png.Writer(size=(self.board.visual_width, self.board.visual_height), palette=colors, bitdepth=self.palette.bitDepth)
             else:
-                self.writer = png.Writer(size=(self.board.width, self.board.height), greyscale=False, alpha=False, bitdepth=8)
+                self.writer = png.Writer(size=(self.board.visual_width, self.board.visual_height), greyscale=False, alpha=False, bitdepth=8)
 
     def paint(self):
         self._createWriter()

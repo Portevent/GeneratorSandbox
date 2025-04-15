@@ -31,4 +31,4 @@ class PixelData(VisualData):
 
     @classmethod
     def EMPTY(cls) -> "PixelData":
-        return PixelData().setColor(Color.BLACK())
+        return cls().setColor(Color.BLACK())
