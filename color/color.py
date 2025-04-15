@@ -170,4 +170,4 @@ class Color:
 
     @classmethod
     def RED(cls):
-        return cls.from_rgb(256, 0, 0)
+        return cls.from_rgb(255, 0, 0)

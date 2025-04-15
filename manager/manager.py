@@ -1,7 +1,7 @@
 from canvas.board.board import BaseBoard
 from generation import Generator
 from painter import BoardPainter
-from profiling import Profiler
+from .profiling import Profiler
 
 
 class Manager:

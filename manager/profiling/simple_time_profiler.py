@@ -1,5 +1,6 @@
 import time
-from profiling.profiler import Profiler
+
+from manager.profiling.profiler import Profiler
 
 
 class SimpleTimeProfiler(Profiler):
