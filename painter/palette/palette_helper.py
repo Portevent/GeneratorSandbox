@@ -1,8 +1,7 @@
 import random
 
-
-from canvas.canvas.palette.palette import Palette
-from canvas.pixel.color import Color
+from color import Color
+from painter.palette import Palette
 
 
 class PaletteHelper:

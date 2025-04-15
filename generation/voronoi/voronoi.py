@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import List, Set, Tuple
+from typing import List
 
-from canvas import Pixel, Canvas, Color, PaletteHelper
-from canvas.pixel.pixel import Point
+from color import Color
 from generation.generator import Generator
 
-class Voronoi[T: Canvas] (Generator, ABC):
+
+
+class Voronoi[T: Board] (Generator, ABC):
     """
     Abstract Voronoi class that defines the basis of a Voronoi Diagram
     """
@@ -29,11 +30,11 @@ class Voronoi[T: Canvas] (Generator, ABC):
 
     def setGermAt(self, germ: int, point: Point) -> None:
         """
-        Set a point to a specific germ on the canvas
+        Set a point to a specific germ on the board
         :param germ: Germ ID
         :param point: Point
         """
-        self.canvas.get(point).element = self.getGermColor(germ)
+        self.board.get(point).element = self.getGermColor(germ)
 
     def initialize(self):
         self.initialGerms = self.generateInitialGerms()

@@ -1,23 +1,24 @@
 from abc import ABC, abstractmethod
 from io import BytesIO
 from pathlib import Path
+from typing import BinaryIO, Self
 
-from canvas.canvas import Canvas
-from painter.canvas_painter import CanvasPainter
+from canvas.board.board import BaseBoard
+from painter.board_painter import BoardPainter
 
 Stream = BytesIO | BinaryIO
 
-class FileCanvasPainter[T: Canvas, Frame](CanvasPainter, ABC):
+class FileBoardPainter[T: BaseBoard, Frame](BoardPainter, ABC):
     """
-    FileCanvasPainter is a specification of CanvasPainter that save generated Frames into files.
+    FileBoardPainter is a specification of BoardPainter that save generated Frames into files.
     It requires a file during initialization in which the final stream will be written.
     To get this final stream, it introduces getFileStream abstract method
     """
 
     file: Path
 
-    def __init__(self, canvas: T, file: str | Path | None = None):
-        super().__init__(canvas)
+    def __init__(self, board: T, file: str | Path | None = None):
+        super().__init__(board)
         if file is not None:
             self.setFile(file)
 
@@ -42,9 +43,10 @@ class FileCanvasPainter[T: Canvas, Frame](CanvasPainter, ABC):
         if self.file is None:
             raise Exception("Trying to save export but no file given")
 
-        self.saveAs(self.file, self.getFinalStream())
+        self.saveAs(self.file, self.getFileStream())
 
-    def saveAs(self, file: str | Path, stream: Stream):
+    @staticmethod
+    def saveAs(file: str | Path, stream: Stream):
         """
         Save a stream to a binary file
         """

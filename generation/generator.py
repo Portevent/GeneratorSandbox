@@ -1,37 +1,37 @@
 from abc import ABC, abstractmethod
 import random
 
-from canvas import Canvas
+from canvas.board.board import BaseBoard
 
 
-class Generator[T: Canvas](ABC):
+class Generator[T: BaseBoard](ABC):
     """
-    Generator is an abstract class that represents algorithms working on canvas.
-    Each implementation of Generator can require more that any Canvas (for instance, only work on Canvas2D)
+    Generator is an abstract class that represents algorithms working on board.
+    Each implementation of Generator can require more that any Board (for instance, only work on Board2D)
     Generator must implement the following methods:
     - initialize : Set up the initial state of the algorithm
     - step : Process an iteration and return False if the algorithm reached the end
     (Implementations of Generator can refuse to divided themselves to step, and just process everything on one step() call
     It will just look bad on animations)
     """
-    canvas: T
+    board: T
     seed: float
 
     def __init__(self, seed: float | None = None,
-                 canvas: T | None = None, **kwargs):
+                 board: T | None = None, **kwargs):
         """
         Create a Generator
         Randomness can be seed
         """
         random.seed(seed)
-        self.setCanvas(canvas)
+        self.setBoard(board)
 
-    def setCanvas(self, canvas: T):
+    def setBoard(self, board: T):
         """
-        Set the canvas
-        :param canvas: New canvas
+        Set the board
+        :param board: New board
         """
-        self.canvas = canvas
+        self.board = board
 
     @abstractmethod
     def initialize(self, **kwargs):

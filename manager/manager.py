@@ -1,27 +1,26 @@
-from abc import ABC, abstractmethod
-
-from canvas import Canvas, CanvasPainter
+from canvas.board.board import BaseBoard
 from generation import Generator
+from painter import BoardPainter
 from profiling import Profiler
 
 
 class Manager:
 
-    canvas: Canvas
-    painter: CanvasPainter
+    board: BaseBoard
+    painter: BoardPainter
     generator: Generator
 
     running: bool
     currentStep : int
 
-    def __init__(self, canvas: Canvas, painter: CanvasPainter, generator: Generator, profiler: Profiler):
-        self.canvas = canvas
+    def __init__(self, board: BaseBoard, painter: BoardPainter, generator: Generator, profiler: Profiler):
+        self.board = board
         self.painter = painter
         self.generator = generator
         self.profiler = profiler
 
-        self.painter.setCanvas(self.canvas)
-        self.generator.setCanvas(self.canvas)
+        self.painter.setBoard(self.board)
+        self.generator.setBoard(self.board)
         self.running = False
         self.currentStep = 0
 

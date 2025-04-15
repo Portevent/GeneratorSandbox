@@ -1,6 +1,6 @@
 from typing import List
 
-from canvas.pixel.color import Color
+from color import Color
 
 
 class Palette:

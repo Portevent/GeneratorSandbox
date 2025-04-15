@@ -1,18 +1,25 @@
 from io import BytesIO
+from itertools import chain
+from typing import Self, List, Tuple
 
+import png
 from PIL import Image
 
-from painter.file_canvas_painter import FileCanvasPainter
-from painter.stream_canvas_painter import Stream
+from canvas.board.visual_board import VisualBoard
+from painter.file_board_painter import FileBoardPainter, Stream
+from painter.palette import Palette
 
 
-class ImageCanvasPainter[T: Canvas, Frame: Stream](FileCanvasPainter):
+class ImageBoardPainter[T: VisualBoard, Frame: Stream](FileBoardPainter):
     """
-    Export Canvas to PNG or GIF files
+    Export Board to PNG or GIF files
     """
     gif: bool = False
     duration: int = 20
     loop: bool = True
+    palette: Palette = None
+
+    writer = None
 
     def setGif(self) -> Self:
         """
@@ -48,21 +55,21 @@ class ImageCanvasPainter[T: Canvas, Frame: Stream](FileCanvasPainter):
         This method create a writer. Once called, width, height and palette cannot be changed
         """
         if self.writer is None:
-            if palette:
-                colors: List[Tuple[int, int, int]] = list(map(Color.to_rgb, palette.list()))
-                self.writer = png.Writer(size=(self.canvas.width, self.canvas.height), palette=colors, bitdepth=palette.bitDepth)
+            if self.palette:
+                colors: List[Tuple[int, int, int]] = list([color.to_rgb() for color in self.palette.list()])
+                self.writer = png.Writer(size=(self.board.width, self.board.height), palette=colors, bitdepth=self.palette.bitDepth)
             else:
-                self.writer = png.Writer(size=(self.canvas.width, self.canvas.height), greyscale=False, alpha=False, bitdepth=8)
+                self.writer = png.Writer(size=(self.board.width, self.board.height), greyscale=False, alpha=False, bitdepth=8)
 
     def paint(self):
         self._createWriter()
         stream = BytesIO()
 
-        self.writer.write(stream, [list(chain(*row)) for row in self.canvas.getRgbRows()])
+        self.writer.write(stream, self.board.getRawRgbRows())
 
         return stream
 
-    def getFinalStream(self, duration: int | None = None, loop: bool | None = None) -> Stream:
+    def getFileStream(self, duration: int | None = None, loop: bool | None = None) -> Stream:
 
         if len(self.frames) == 0:
             self.createFrame()

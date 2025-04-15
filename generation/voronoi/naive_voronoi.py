@@ -1,12 +1,12 @@
 from copy import copy
 from typing import List
 
-from canvas import Canvas, LinkedPixel
-from canvas.pixel.pixel import Point, Pixel
+from board import Board, LinkedPixel
+from board.pixel.pixel import Point, Pixel
 from generation.voronoi.voronoi import Voronoi
 
 
-class NaiveVoronoi[T: Canvas[LinkedPixel]](Voronoi):
+class NaiveVoronoi[T: Board[LinkedPixel]](Voronoi):
     """
     Abstract Voronoi implementation that solves it naively
     """
@@ -16,18 +16,18 @@ class NaiveVoronoi[T: Canvas[LinkedPixel]](Voronoi):
 
     def generateInitialGerms(self) -> List[Point]:
         """
-        Divide the canvas into area (*germs_count* rows and *germs_count* columns)
+        Divide the board into area (*germs_count* rows and *germs_count* columns)
         Generates one germs in each cell, randomly placed inside the cell
         """
-        return [self.canvas.getRandomPoint() for _ in range(self.germsCount)]
+        return [self.board.getRandomPoint() for _ in range(self.germsCount)]
 
     def initialize(self):
         super().initialize()
-        self.germsExpansion = [self.canvas.get(point) for point in self.initialGerms]
+        self.germsExpansion = [self.board.get(point) for point in self.initialGerms]
 
     def step(self) -> bool:
         """
-        Naive solution that expand germs to their empty neighbors until the canvas is filled
+        Naive solution that expand germs to their empty neighbors until the board is filled
         """
         try:
             nextGerm = self.germsExpansion.pop(0)

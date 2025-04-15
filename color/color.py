@@ -15,9 +15,11 @@ class Color:
     @property
     def r(self) -> int:
         return self._r
+
     @property
     def g(self) -> int:
         return self._g
+
     @property
     def b(self) -> int:
         return self._b
@@ -116,7 +118,7 @@ class Color:
         :param b: Blue
         :return: Color
         """
-        return Color(int(r*255), int(g*255), int(b*255))
+        return Color(int(r * 255), int(g * 255), int(b * 255))
 
     @staticmethod
     def from_int(rgb: int) -> Color:
@@ -137,7 +139,7 @@ class Color:
         :return: Color
         """
         chroma = value * saturation
-        h_prime = (hue % 360)/60
+        h_prime = (hue % 360) / 60
         x = chroma * (1 - abs(h_prime % 2 - 1))
         r: float
         g: float
@@ -161,3 +163,11 @@ class Color:
         g += m
         b += m
         return Color.from_1rgb(r, g, b)
+
+    @classmethod
+    def BLACK(cls):
+        return cls.from_rgb(0, 0, 0)
+
+    @classmethod
+    def RED(cls):
+        return cls.from_rgb(256, 0, 0)
