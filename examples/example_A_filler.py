@@ -13,15 +13,23 @@ HEIGHT = 10
 # Colors
 board = VisualBoard.EMPTY(WIDTH, HEIGHT, PixelData)
 
+
 def setRed(_: Coordinate, cell: BaseCell, __: float) -> None:
+    """
+    Set the cell_data's color to Red
+    """
     cell.cell_data.setColor(Color.RED())
 
+
 # Generator
-generator = Filler(start=Coordinate(2, 2), end=Coordinate(7,7)).do(setRed)
+generator = Filler(start=Coordinate(2, 2), end=Coordinate(7, 7)).do(setRed)
 
 # Painter
 painter = ImageBoardPainter(board, "out/filler.gif").setGif()
 
 # Running the generator
-with Manager(board=board, painter=painter, generator=generator, profiler=SimpleTimeProfiler()) as manager:
+with Manager(board=board,
+             painter=painter,
+             generator=generator,
+             profiler=SimpleTimeProfiler()) as manager:
     manager.run()
