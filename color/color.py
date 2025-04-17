@@ -5,6 +5,11 @@ from typing import Self, List
 Gradient = List["Color"]
 Gradient2D = List[Gradient]
 
+
+def _mix(start, end, mix):
+    return start * (1 - mix) + end * mix
+
+
 class Color:
     """
     Color helper class
@@ -69,6 +74,39 @@ class Color:
         :return: tuple (r, g, b)
         """
         return self._r, self._g, self._b
+
+    def to_1rgb(self) -> tuple[float, float, float]:
+        """
+        Convert to tuple (r, g, b), each component has float from 0 to 1
+        :return: tuple (r, g, b)
+        """
+        return self._r / 255, self._g / 255, self._b / 255
+
+    def to_hsv(self) -> tuple[int, float, float]:
+        """
+        Convert to hue saturation value tuple
+        :return: (0 to 360, 0 to 1, 0 to 1)
+        """
+        r, g, b = self.to_1rgb()
+        min_component: float = min(r, g, b)
+        value: float = max(r, g, b)
+
+        chroma = value - min_component
+
+        h: float = 0
+        if chroma > 0:
+            if r == value:
+                h = 60 * (((g - b) / chroma) % 6)
+            elif g == value:
+                h = 60 * ((b - r) / chroma + 2)
+            elif b == value:
+                h = 60 * ((r - g) / chroma + 4)
+
+        s = 0 if value == 0 else (chroma / value)
+
+        v = value
+
+        return int(h), s, v
 
     def add(self, amount: int) -> Self:
         """
@@ -188,23 +226,29 @@ class Color:
 
     @staticmethod
     def mix(colorA: Color, colorB: Color, mix: float = 0.5) -> Color:
-        return Color.from_rgb(int(colorA.r * (1 - mix) + colorB.r * mix),
-                              int(colorA.g * (1 - mix) + colorB.g * mix),
-                              int(colorA.b * (1 - mix) + colorB.b * mix))
+        hA, sA, vA = colorA.to_hsv()
+        hB, sB, vB = colorB.to_hsv()
+        return Color.from_hsv(int(_mix(hA, hB, mix)),
+                              _mix(sA, sB, mix),
+                              _mix(vA, vB, mix))
 
     @classmethod
     def GRADIENT(cls, colorA: Color, colorB: Color, size: int) -> Gradient:
         """
         Return a Gradient between colorA and colorB (inclusive)
         """
-        return [cls.mix(colorA, colorB, mix / (size-1)) for mix in range(size)]
+        return [cls.mix(colorA, colorB, mix / (size - 1)) for mix in range(size)]
 
     @classmethod
-    def GRADIENT2D(cls, colorA: Color, colorB: Color, width: int, height: int, inverted: bool = False) -> Gradient2D:
+    def GRADIENT2D(cls, colorA: Color, colorB: Color,
+                   width: int, height: int,
+                   inverted: bool = False) -> Gradient2D:
         """
         Return a 2D Gradient (from top left to bottom right)
         """
-        gradient = cls.GRADIENT(colorA if not inverted else colorB, colorB if not inverted else colorA, height + width)
+        gradient = cls.GRADIENT(colorB if inverted else colorA,
+                                colorA if inverted else colorB,
+                                height + width)
 
         return [
             cls.GRADIENT(gradient[i], gradient[width + i], width)
@@ -212,13 +256,17 @@ class Color:
         ]
 
     @classmethod
-    def SUPER_GRADIENT2D(cls, colorA: Color, colorB: Color, width: int, height: int,
-                         sub_gradient_width: int, sub_gradient_height: int, inverted: bool = False) -> List[List[Gradient2D]]:
+    def SUPER_GRADIENT2D(cls, colorA: Color, colorB: Color,
+                         width: int, height: int,
+                         sub_gradient_width: int, sub_gradient_height: int,
+                         inverted: bool = False) -> List[
+        List[Gradient2D]]:
         gradient = cls.GRADIENT(colorA, colorB, height + width)
 
         return [
             [
-                cls.GRADIENT2D(gradient[i+j], gradient[i+j+1], sub_gradient_width, sub_gradient_height, inverted)
+                cls.GRADIENT2D(gradient[i + j], gradient[i + j + 1],
+                               sub_gradient_width, sub_gradient_height, inverted)
                 for i in range(width)
             ]
             for j in range(height)

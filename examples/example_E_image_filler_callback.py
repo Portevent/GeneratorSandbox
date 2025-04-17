@@ -8,22 +8,22 @@ from painter import ImageBoardPainter
 
 ### Base variable
 # Board
-WIDTH = 5
-HEIGHT = 5
+WIDTH = 4
+HEIGHT = 4
 
-VISUAL_WIDTH = 16
-VISUAL_HEIGHT = 16
+VISUAL_WIDTH = 10
+VISUAL_HEIGHT = 10
 
-colorA = Color(240,110,60)
-colorB = Color(70, 255, 100)
+colorA = Color.from_hsv(0, 1, 1)
+colorB = Color.from_hsv(359, 1, 1)
 
 gradient = Color.SUPER_GRADIENT2D(colorA, colorB, WIDTH, HEIGHT, VISUAL_WIDTH, VISUAL_HEIGHT, inverted=True)
 
 def getImageData(coordinate: Coordinate, _: BaseCell, __: float) -> ImageData:
-    return ImageData(16, 16, gradient[coordinate.x][coordinate.y])
+    return ImageData(VISUAL_WIDTH, VISUAL_WIDTH, gradient[coordinate.x][coordinate.y])
 
 # Colors
-board = VisualBoard.FROM(WIDTH, HEIGHT, ImageData.CreateEmpty(16,16), (16,16))
+board = VisualBoard.FROM(WIDTH, HEIGHT, ImageData.CreateEmpty(VISUAL_WIDTH,VISUAL_WIDTH), (VISUAL_WIDTH,VISUAL_WIDTH))
 
 # Generator
 generator = DataFiller(start=Coordinate(0, 0), end=Coordinate(WIDTH-1,HEIGHT-1)) \
