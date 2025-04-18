@@ -9,10 +9,10 @@ class ImagePaletteData(BaseImageData):
     Image data that has a specific size and a list of pixels
     """
 
-    palette : ImagePalette
-    index : int = 0
+    palette: ImagePalette
+    index: int | None = None
 
-    def __init__(self, palette: ImagePalette, index: int = 0):
+    def __init__(self, palette: ImagePalette, index: int | None = None):
         self.palette = palette
         self.index = index
 
@@ -31,3 +31,7 @@ class ImagePaletteData(BaseImageData):
     @property
     def image(self):
         return self.palette.get(self.index)
+
+    @property
+    def has_image(self) -> bool:
+        return self.index is not None

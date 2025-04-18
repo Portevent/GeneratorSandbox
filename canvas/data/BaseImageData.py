@@ -16,9 +16,16 @@ class BaseImageData(VisualData):
         :param y:
         :return:
         """
+        if not self.has_image:
+            return 0, 0, 0
+
         _x, _y = x, y
         return self.image[_y][_x].to_rgb()
 
     @property
     def image(self) -> Image:
+        raise NotImplementedError
+
+    @property
+    def has_image(self) -> bool:
         raise NotImplementedError
