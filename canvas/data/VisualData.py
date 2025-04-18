@@ -7,9 +7,6 @@ class VisualData(ABC):
     Visual Data are CellData that can be visuallized by a image (1x1 image for simple pixel data)
     """
 
-    width = 1
-    height = 1
-
     def getRGB(self, x: int, y: int) -> Tuple[int, int, int]:
         """
         Returns the RGB value of a pixel at (x, y).
@@ -22,7 +19,10 @@ class VisualData(ABC):
     def getRowRGB(self, y: int) -> List[Tuple[int, int, int]]:
         return [self.getRGB(x, y) for x in range(0, self.width)]
 
-    @classmethod
     @abstractmethod
-    def EMPTY(cls) -> "VisualData":
+    def width(self) -> int:
+        raise NotImplementedError
+
+    @abstractmethod
+    def height(self) -> int:
         raise NotImplementedError

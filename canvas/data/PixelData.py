@@ -9,9 +9,6 @@ class PixelData(VisualData):
     Simple color Pixel
     """
 
-    width = 1
-    height = 1
-
     color: Color = Color.BLACK()
 
     def getRGB(self, x: int, y: int) -> Tuple[int, int, int]:
@@ -27,6 +24,13 @@ class PixelData(VisualData):
         self.color = color
         return self
 
+    @property
+    def width(self) -> int:
+        return 1
+
+    @property
+    def height(self) -> int:
+        return 1
 
 
     @classmethod

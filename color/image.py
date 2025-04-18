@@ -6,7 +6,7 @@ import png
 
 from color import Color
 
-Image = List[List[Color]]
+type Image = List[List[Color]]
 
 
 def rowToColors(row: List[int], width: int):

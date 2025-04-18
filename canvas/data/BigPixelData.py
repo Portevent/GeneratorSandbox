@@ -6,5 +6,11 @@ class BigPixelData(PixelData):
     Big Pixel
     """
 
-    width = 10
-    height = 10
+
+    @property
+    def width(self) -> int:
+        return 10
+
+    @property
+    def height(self) -> int:
+        return 10
