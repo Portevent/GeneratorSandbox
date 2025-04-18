@@ -2,11 +2,11 @@ from pathlib import Path
 from typing import Tuple, Self, Callable
 
 from canvas import Coordinate, BaseCell
-from canvas.data.VisualData import VisualData
+from canvas.data.ImageData import ImageData
 from color import Color, Image, ImageLoader
 
 
-class ImageData(VisualData):
+class ImagePaletteData(ImageData):
     """
     Image data that has a specific size and a list of pixels
     """
