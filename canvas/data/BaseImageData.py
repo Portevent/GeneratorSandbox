@@ -1,9 +1,7 @@
-from pathlib import Path
-from typing import Tuple, Self, Callable
+from typing import Tuple
 
-from canvas import Coordinate, BaseCell
 from canvas.data.VisualData import VisualData
-from color import Color, Image, ImageLoader
+from color import Image
 
 
 class BaseImageData(VisualData):
@@ -21,8 +19,6 @@ class BaseImageData(VisualData):
         _x, _y = x, y
         return self.image[_y][_x].to_rgb()
 
-    @abstractmethod
     @property
     def image(self) -> Image:
         raise NotImplementedError
-        

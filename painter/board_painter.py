@@ -16,6 +16,8 @@ class BoardPainter[T: BaseBoard, Frame](ABC):
     frames: List[Frame]
     animation = False
     maxFrame: int | None = None
+    frameRate: int = 1
+    frameLoop: int = 0
 
     def __init__(self, board: T | None = None):
         self.board = board
@@ -32,14 +34,25 @@ class BoardPainter[T: BaseBoard, Frame](ABC):
         """
         Create a new frame and save it within frames
         """
+        self.frameLoop += 1
+
+        if self.frameLoop == self.frameRate:
+            self.frameLoop = 0
+        else:
+            return
+
         if self.animation:
 
             if self.maxFrame is not None and len(self.frames) >= self.maxFrame:
                 self.frames = self.frames[::2]
+                self.frameRate *= 2
 
             self.frames.append(self.paint())
         else:
             self.frames = [self.paint()]
+
+        if self.frameLoop == self.frameRate:
+            self.frameLoop = 0
 
     def setMaxFrame(self, maxFrame: int) -> Self:
         """

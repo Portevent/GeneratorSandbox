@@ -1,6 +1,5 @@
 from io import BytesIO
-from itertools import chain
-from typing import Self, List, Tuple
+from typing import Self
 
 import png
 from PIL import Image

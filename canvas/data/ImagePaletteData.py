@@ -1,9 +1,7 @@
-from pathlib import Path
-from typing import Tuple, Self, Callable
+from typing import Self
 
-from canvas import Coordinate, BaseCell
 from canvas.data.BaseImageData import BaseImageData
-from color import Color, Image, ImageLoader
+from color.image_palette import ImagePalette
 
 
 class ImagePaletteData(BaseImageData):
